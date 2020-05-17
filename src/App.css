@@ -4,13 +4,14 @@
 
 .App {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
 
 .board {
-  border: 2px solid blue;
+  border: 2px solid rgb(71, 71, 165);
   width: 400px;
 }
 
