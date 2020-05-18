@@ -33,25 +33,35 @@ function App() {
     setTargetColor(`rgb(${red}, ${blue}, ${green})`);
   };
 
+  let rows = [];
+  let targetRow = Math.floor(Math.random() * 3);
+  let targetColumn = Math.floor(Math.random() * 3);
+  for (let i = 0; i < 3; i++) {
+    let circles = [];
+    for (let j = 0; j < 3; j++) {
+      let color = normalColor;
+      if (i === targetRow && j === targetColumn) {
+        color = targetColor;
+      }
+      circles.push(
+        <div
+          key={`${i}, ${j}`}
+          className='circle'
+          style={{ background: color }}
+        ></div>
+      );
+    }
+    let row = (
+      <div key={i} className='row'>
+        {circles}
+      </div>
+    );
+    rows.push(row);
+  }
+
   return (
     <div className='App'>
-      <div className='board'>
-        <div className='row'>
-          <div className='circle' style={{ background: normalColor }}></div>
-          <div className='circle' style={{ background: targetColor }}></div>
-          <div className='circle' style={{ background: normalColor }}></div>
-        </div>
-        <div className='row'>
-          <div className='circle' style={{ background: normalColor }}></div>
-          <div className='circle' style={{ background: normalColor }}></div>
-          <div className='circle' style={{ background: normalColor }}></div>
-        </div>
-        <div className='row'>
-          <div className='circle' style={{ background: normalColor }}></div>
-          <div className='circle' style={{ background: normalColor }}></div>
-          <div className='circle' style={{ background: normalColor }}></div>
-        </div>
-      </div>
+      <div className='board'>{rows}</div>
       <button onClick={generateColors}>Get color</button>
     </div>
   );
