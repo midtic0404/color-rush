@@ -4,13 +4,20 @@ import Circle from './Circle';
 
 function App() {
   const [gameRows, setGameRows] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [score, setScore] = useState(0);
 
   const startGame = () => {
+    setScore(0);
+    setIsPlaying(true);
     setUpRows();
   };
 
   const circleClicked = (isTarget) => {
     if (isTarget) {
+      setScore((score) => {
+        return score + 1;
+      });
       setUpRows();
     }
   };
@@ -21,7 +28,7 @@ function App() {
     let red = restColors;
     let green = restColors;
     let blue = restColors;
-    let offset = Math.floor(Math.random() * 2) === 0 ? -30 : 30;
+    let offset = Math.floor(Math.random() * 2) === 0 ? -20 : 20;
     let randRGB = Math.floor(Math.random() * 3);
     let normalColor = '';
     let targetColor = '';
@@ -78,8 +85,13 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='board'>{gameRows}</div>
-      <button onClick={startGame}>Start Game</button>
+      {isPlaying && <div className='board'>{gameRows}</div>}
+      <h1 className='score'>Score: {score}</h1>
+      {!isPlaying && (
+        <button className='button' onClick={startGame}>
+          Start Game
+        </button>
+      )}
     </div>
   );
 }
