@@ -1,68 +1,85 @@
 import React, { useState } from 'react';
 import './App.css';
+import Circle from './Circle';
 
 function App() {
-  const [normalColor, setNormalColor] = useState(null);
-  const [targetColor, setTargetColor] = useState(null);
+  const [gameRows, setGameRows] = useState([]);
 
-  const generateColors = () => {
+  const startGame = () => {
+    setUpRows();
+  };
+
+  const circleClicked = (isTarget) => {
+    if (isTarget) {
+      setUpRows();
+    }
+  };
+
+  const setUpRows = () => {
+    let baseColor = Math.floor(Math.random() * 256);
     let restColors = Math.floor(Math.random() * 96) + 80;
     let red = restColors;
     let green = restColors;
     let blue = restColors;
     let offset = Math.floor(Math.random() * 2) === 0 ? -30 : 30;
     let randRGB = Math.floor(Math.random() * 3);
+    let normalColor = '';
+    let targetColor = '';
 
     if (randRGB === 0) {
-      red = 255;
-      setNormalColor(`rgb(${red}, ${blue}, ${green})`);
+      red = baseColor;
+      normalColor = `rgb(${red}, ${blue}, ${green})`;
       blue += offset;
       green += offset;
     } else if (randRGB === 1) {
-      green = 255;
-      setNormalColor(`rgb(${red}, ${blue}, ${green})`);
+      green = baseColor;
+      normalColor = `rgb(${red}, ${blue}, ${green})`;
       red += offset;
       blue += offset;
     } else {
-      blue = 255;
-      setNormalColor(`rgb(${red}, ${blue}, ${green})`);
+      blue = baseColor;
+      normalColor = `rgb(${red}, ${blue}, ${green})`;
       red += offset;
       green += offset;
     }
 
-    setTargetColor(`rgb(${red}, ${blue}, ${green})`);
-  };
+    targetColor = `rgb(${red}, ${blue}, ${green})`;
 
-  let rows = [];
-  let targetRow = Math.floor(Math.random() * 3);
-  let targetColumn = Math.floor(Math.random() * 3);
-  for (let i = 0; i < 3; i++) {
-    let circles = [];
-    for (let j = 0; j < 3; j++) {
-      let color = normalColor;
-      if (i === targetRow && j === targetColumn) {
-        color = targetColor;
+    let rows = [];
+    let newTargetRow = Math.floor(Math.random() * 3);
+    let newTargetColumn = Math.floor(Math.random() * 3);
+    for (let i = 0; i < 3; i++) {
+      let circles = [];
+      for (let j = 0; j < 3; j++) {
+        let color = normalColor;
+        let isTarget = false;
+        if (i === newTargetRow && j === newTargetColumn) {
+          color = targetColor;
+          isTarget = true;
+        }
+        circles.push(
+          <Circle
+            key={`${i}, ${j}`}
+            color={color}
+            circleClicked={circleClicked}
+            isTarget={isTarget}
+          />
+        );
       }
-      circles.push(
-        <div
-          key={`${i}, ${j}`}
-          className='circle'
-          style={{ background: color }}
-        ></div>
+      let row = (
+        <div key={i} className='row'>
+          {circles}
+        </div>
       );
+      rows.push(row);
     }
-    let row = (
-      <div key={i} className='row'>
-        {circles}
-      </div>
-    );
-    rows.push(row);
-  }
+    setGameRows(rows);
+  };
 
   return (
     <div className='App'>
-      <div className='board'>{rows}</div>
-      <button onClick={generateColors}>Get color</button>
+      <div className='board'>{gameRows}</div>
+      <button onClick={startGame}>Start Game</button>
     </div>
   );
 }
