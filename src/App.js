@@ -41,6 +41,10 @@ function App() {
       });
       resetTimer();
       setUpRows();
+    } else {
+      setTimeLeft((timeLeft) => {
+        return timeLeft - 1;
+      });
     }
   };
 
