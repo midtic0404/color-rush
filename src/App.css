@@ -15,6 +15,10 @@
   min-height: 100vh;
 }
 
+.count-down {
+  font-size: 3rem;
+}
+
 .board {
   width: 400px;
   margin-bottom: 2rem;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import './App.css';
 import Circle from './Circle';
 
@@ -6,11 +6,32 @@ function App() {
   const [gameRows, setGameRows] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const intervalRef = useRef(null);
 
   const startGame = () => {
     setScore(0);
     setIsPlaying(true);
+    startTimer();
     setUpRows();
+  };
+
+  const startTimer = () => {
+    setTimeLeft(5);
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((timeLeft) => {
+        if (timeLeft > 1) {
+          return timeLeft - 1;
+        }
+        gameOver();
+        return 0;
+      });
+    }, 1000);
+  };
+
+  const gameOver = () => {
+    setIsPlaying(false);
+    stopTimer();
   };
 
   const circleClicked = (isTarget) => {
@@ -18,8 +39,19 @@ function App() {
       setScore((score) => {
         return score + 1;
       });
+      resetTimer();
       setUpRows();
     }
+  };
+
+  const resetTimer = () => {
+    stopTimer();
+    startTimer();
+  };
+
+  const stopTimer = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
   };
 
   const setUpRows = () => {
@@ -85,7 +117,12 @@ function App() {
 
   return (
     <div className='App'>
-      {isPlaying && <div className='board'>{gameRows}</div>}
+      {isPlaying && (
+        <Fragment>
+          <h1 className='count-down'>{timeLeft}</h1>
+          <div className='board'>{gameRows}</div>
+        </Fragment>
+      )}
       <h1 className='score'>Score: {score}</h1>
       {!isPlaying && (
         <button className='button' onClick={startGame}>
